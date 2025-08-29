@@ -1,18 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Tareas_Cruds.Models;
+using Tareas_Cruds.Models;
+
 namespace Tareas_Cruds.Data
 {
-    public class TareaDBContext : DbContext
+    public class TareaDbContext : DbContext
     {
-        public TareaDBContext(DbContextOptions<TareaDBContext> options) : base(options)
+        public TareaDbContext(DbContextOptions<TareaDbContext> options)
+            : base(options)
         {
         }
-        public DbSet<Tarea> Tareas {  get; set; }
-        protected TareaDBContext() 
-        { 
-        }
 
-
-    } 
+        public DbSet<Tarea> Tareas { get; set; }
+    }
 }
-
