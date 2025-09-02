@@ -2,25 +2,48 @@
 @model ErrorModel
 @{
     ViewData["Title"] = "Error";
+    ViewData["ShowHero"] = false;
 }
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-danger-subtle d-flex align-items-center gap-2">
+                <i class="bi bi-x-octagon text-danger"></i>
+                <h5 class="mb-0 text-danger">Se produjo un error</h5>
+            </div>
+            <div class="card-body">
+                <p class="lead">Ocurrió un problema al procesar tu solicitud.</p>
 
-@if (Model.ShowRequestId)
-{
-    <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
-    </p>
-}
+                @if (Model.ShowRequestId)
+                {
+                    <div class="alert alert-secondary">
+                        <strong>Request ID:</strong> <code>@Model.RequestId</code>
+                    </div>
+                }
 
-<h3>Development Mode</h3>
-<p>
-    Swapping to the <strong>Development</strong> environment displays detailed information about the error that occurred.
-</p>
-<p>
-    <strong>The Development environment shouldn't be enabled for deployed applications.</strong>
-    It can result in displaying sensitive information from exceptions to end users.
-    For local debugging, enable the <strong>Development</strong> environment by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>
-    and restarting the app.
-</p>
+                <div class="accordion" id="devInfo">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingDev">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDev" aria-expanded="false" aria-controls="collapseDev">
+                                Información para desarrollo
+                            </button>
+                        </h2>
+                        <div id="collapseDev" class="accordion-collapse collapse" aria-labelledby="headingDev" data-bs-parent="#devInfo">
+                            <div class="accordion-body">
+                                Cambia al entorno <strong>Development</strong> para ver detalles del error.
+                                <br />
+                                Configura la variable <code>ASPNETCORE_ENVIRONMENT</code> = <code>Development</code> y reinicia la app.
+                                <div class="small text-body-secondary mt-2">
+                                    Evita habilitar <em>Development</em> en producción para no exponer información sensible.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <a asp-page="/Index" class="btn btn-primary mt-3"><i class="bi bi-house-door me-1"></i> Ir al inicio</a>
+            </div>
+        </div>
+    </div>
+</div>

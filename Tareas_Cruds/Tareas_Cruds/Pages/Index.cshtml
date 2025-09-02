@@ -1,54 +1,30 @@
 ﻿@page
 @model Tareas_Cruds.Pages.IndexModel
-
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Inicio";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Tarea[0].nombreTarea)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Tarea[0].fechaVencimiento)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Tarea[0].estado)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Tarea[0].idUsuario)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Tarea) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.nombreTarea)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.fechaVencimiento)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.estado)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.idUsuario)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+@section Breadcrumbs {
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page">Inicio</li>
+        </ol>
+    </nav>
 }
-    </tbody>
-</table>
+
+<div class="row g-3">
+    <div class="col-12 col-xl-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-body-tertiary">
+                <h5 class="mb-0"><i class="bi bi-lightning-charge me-2"></i> Acciones rápidas</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex flex-wrap gap-2">
+                    <a class="btn btn-primary" asp-page="/Tareas/Create"><i class="bi bi-plus-lg me-1"></i> Nueva tarea</a>
+                    <a class="btn btn-outline-secondary" asp-page="/Tareas/Index"><i class="bi bi-list-check me-1"></i> Ver tareas</a>
+                    <a class="btn btn-outline-primary" asp-page="/Privacy"><i class="bi bi-shield-lock me-1"></i> Privacidad</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

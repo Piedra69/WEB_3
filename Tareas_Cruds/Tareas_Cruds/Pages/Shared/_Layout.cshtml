@@ -1,4 +1,4 @@
-﻿@* /Pages/Shared/_Layout.cshtml *@
+﻿@* Layout global: navbar + contenedor + footer. Empuja el footer abajo. *@
 <!DOCTYPE html>
 <html lang="es" data-bs-theme="light">
 <head>
@@ -6,34 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@(ViewData["Title"] is null ? "Tareas_Cruds" : ViewData["Title"] + " · Tareas_Cruds")</title>
 
-    <meta name="color-scheme" content="light dark">
+    <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#0d6efd" />
 
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-    <!-- Bootstrap (local) -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-
-    <!-- Bootstrap Icons (CDN) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-    <!-- App CSS -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Tareas_Cruds.styles.css" asp-append-version="true" />
 </head>
-<body>
-    <!-- Top Alert (opcional) -->
-    <div id="app-announcement" class="app-announcement text-center small d-none">
-        <i class="bi bi-stars me-1"></i> Bienvenido a <strong>Tareas_Cruds</strong>. ¡Organiza, filtra y completa tus tareas!
-    </div>
-
-    <!-- NAVBAR -->
+<body class="d-flex flex-column min-vh-100">
     <header class="sticky-top shadow-sm">
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
             <div class="container">
-                <a class="navbar-brand d-flex align-items-center gap-2" asp-area="" asp-page="/Index">
+                <a class="navbar-brand d-flex align-items-center gap-2" asp-page="/Index">
                     <i class="bi bi-check2-square fs-4 text-primary"></i>
                     <span class="fw-bold">Tareas_Cruds</span>
                 </a>
@@ -45,22 +33,20 @@
 
                 <div class="collapse navbar-collapse" id="mainNavbar">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item"><a class="nav-link" asp-area="" asp-page="/Index"><i class="bi bi-house-door me-1"></i>Inicio</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-area="" asp-page="/Tareas/Index"><i class="bi bi-list-check me-1"></i>Tareas</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-area="" asp-page="/Estadisticas/Index"><i class="bi bi-graph-up me-1"></i>Estadísticas</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-area="" asp-page="/Privacy"><i class="bi bi-shield-lock me-1"></i>Privacidad</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-page="/Index"><i class="bi bi-house-door me-1"></i>Inicio</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-page="/Tareas/Index"><i class="bi bi-list-check me-1"></i>Tareas</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-page="/Privacy"><i class="bi bi-shield-lock me-1"></i>Privacidad</a></li>
                     </ul>
 
                     <form method="get" asp-page="/Tareas/Index" class="d-flex me-2" role="search">
-                        <input class="form-control" type="search" name="q" placeholder="Buscar tareas..." aria-label="Buscar" />
+                        <input class="form-control" type="search" name="q" placeholder="Buscar tareas…" aria-label="Buscar" />
                     </form>
 
                     <div class="d-flex align-items-center gap-2">
-                        <button id="themeToggle" class="btn btn-outline-secondary btn-sm" type="button"
-                                title="Alternar tema">
+                        <button id="themeToggle" class="btn btn-outline-secondary btn-sm" type="button" title="Tema claro/oscuro">
                             <i class="bi bi-moon-stars"></i>
                         </button>
-                        <a class="btn btn-primary btn-sm" asp-area="" asp-page="/Tareas/Create">
+                        <a class="btn btn-primary btn-sm" asp-page="/Tareas/Create">
                             <i class="bi bi-plus-lg me-1"></i>Nueva tarea
                         </a>
                     </div>
@@ -69,157 +55,51 @@
         </nav>
     </header>
 
-    <!-- HERO / ENCABEZADO (opcional por página) -->
-    @if (ViewData["ShowHero"] as bool? == true)
-    {
-        <section class="hero-section py-5 bg-gradient">
-            <div class="container">
-                <div class="row align-items-center g-4">
-                    <div class="col-12 col-lg-7">
-                        <h1 class="display-6 fw-bold mb-2">@ViewData["HeroTitle"] ?? "Gestiona tus tareas como un pro"</h1>
-                        <p class="lead text-body-secondary mb-3">
-                            @ViewData["HeroSubtitle"] ?? "Crea, edita y realiza seguimiento con filtros y estadísticas claras."
-                        </p>
-                        <div class="d-flex gap-2">
-                            <a class="btn btn-primary" asp-page="/Tareas/Create"><i class="bi bi-plus-lg me-1"></i>Crear tarea</a>
-                            <a class="btn btn-outline-secondary" asp-page="/Tareas/Index"><i class="bi bi-funnel me-1"></i>Ver listas</a>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-5">
-                        <div class="hero-card card border-0 shadow-sm">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <span class="fw-semibold">Resumen de hoy</span>
-                                    <i class="bi bi-calendar2-check"></i>
-                                </div>
-                                <hr class="my-2" />
-                                <div class="row text-center">
-                                    <div class="col">
-                                        <div class="fs-4 fw-bold text-primary">@ViewData["CntPendientes"] ?? "—"</div>
-                                        <div class="text-body-secondary small">Pendientes</div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="fs-4 fw-bold text-info">@ViewData["CntEnCurso"] ?? "—"</div>
-                                        <div class="text-body-secondary small">En curso</div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="fs-4 fw-bold text-success">@ViewData["CntFinalizados"] ?? "—"</div>
-                                        <div class="text-body-secondary small">Hechas</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    }
-
-    <!-- MAIN -->
-    <div class="container my-4">
-        <!-- Migas opcionales -->
+    <div class="container my-4 flex-grow-1">
         @RenderSection("Breadcrumbs", required: false)
-
-        <!-- Alertas globales -->
-        <div id="alert-area" class="mb-3"></div>
-
         <main role="main" class="pb-4">
             @RenderBody()
         </main>
     </div>
 
-    <!-- FOOTER -->
     <footer class="footer mt-auto border-top py-4">
         <div class="container">
-            <div class="row gy-3">
-                <div class="col-12 col-md-4">
-                    <div class="d-flex align-items-center gap-2 mb-2">
-                        <i class="bi bi-check2-square fs-5 text-primary"></i>
-                        <span class="fw-semibold">Tareas_Cruds</span>
-                    </div>
-                    <p class="text-body-secondary small mb-2">
-                        Una forma simple y potente de organizar tus pendientes.
-                    </p>
-                    <div class="d-flex gap-2">
-                        <a href="#" class="text-body-secondary"><i class="bi bi-github"></i></a>
-                        <a href="#" class="text-body-secondary"><i class="bi bi-twitter-x"></i></a>
-                        <a href="#" class="text-body-secondary"><i class="bi bi-globe2"></i></a>
-                    </div>
-                </div>
-                <div class="col-6 col-md-4">
-                    <div class="fw-semibold mb-2">Producto</div>
-                    <ul class="list-unstyled small">
-                        <li><a class="link-body-emphasis" asp-page="/Tareas/Index">Listas & Filtros</a></li>
-                        <li><a class="link-body-emphasis" asp-page="/Estadisticas/Index">Estadísticas</a></li>
-                        <li><a class="link-body-emphasis" asp-page="/Privacy">Privacidad</a></li>
-                    </ul>
-                </div>
-                <div class="col-6 col-md-4">
-                    <div class="fw-semibold mb-2">Soporte</div>
-                    <ul class="list-unstyled small">
-                        <li><a class="link-body-emphasis" href="mailto:soporte@tareas-cruds.local">soporte@tareas-cruds.local</a></li>
-                        <li><a class="link-body-emphasis" href="#">Guía rápida</a></li>
-                        <li><a class="link-body-emphasis" href="#">Changelog</a></li>
-                    </ul>
-                </div>
-            </div>
-            <hr class="my-3" />
             <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center small text-body-secondary">
-                <div>© @DateTime.Now.Year Tareas_Cruds. Todos los derechos reservados.</div>
-                <div>Hecho con <i class="bi bi-heart-fill"></i> y Bootstrap.</div>
+                <div>© @DateTime.Now.Year Tareas_Cruds</div>
+                <div>Hecho con <i class="bi bi-heart-fill"></i> y Bootstrap</div>
             </div>
         </div>
     </footer>
 
-    <!-- JS -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-
     <script>
-        // ===== Tema persistente (light/dark) =====
+        // Tema persistente
         (function () {
             const key = "tareas.theme";
             const root = document.documentElement;
-            const stored = localStorage.getItem(key);
-            if (stored) root.setAttribute("data-bs-theme", stored);
-
+            const saved = localStorage.getItem(key);
+            if (saved) root.setAttribute("data-bs-theme", saved);
             const btn = document.getElementById("themeToggle");
-            function updateIcon() {
-                const theme = root.getAttribute("data-bs-theme");
-                btn && (btn.innerHTML = theme === "dark"
-                    ? '<i class="bi bi-brightness-high"></i>'
-                    : '<i class="bi bi-moon-stars"></i>');
-            }
-            updateIcon();
-
+            const setIcon = () => btn && (btn.innerHTML =
+                root.getAttribute("data-bs-theme") === "dark"
+                ? '<i class="bi bi-brightness-high"></i>' : '<i class="bi bi-moon-stars"></i>');
+            setIcon();
             btn?.addEventListener("click", () => {
-                const current = root.getAttribute("data-bs-theme") || "light";
-                const next = current === "light" ? "dark" : "light";
+                const next = (root.getAttribute("data-bs-theme") || "light") === "light" ? "dark" : "light";
                 root.setAttribute("data-bs-theme", next);
                 localStorage.setItem(key, next);
-                updateIcon();
+                setIcon();
             });
         })();
 
-        // ===== Activo en navegación =====
+        // Nav activo
         (function () {
             const current = location.pathname.toLowerCase();
             document.querySelectorAll(".navbar .nav-link").forEach(a => {
                 const href = a.getAttribute("href")?.toLowerCase();
-                if (!href) return;
-                if (href === current || (href !== "/" && current.startsWith(href))) {
-                    a.classList.add("active");
-                }
+                if (href && (href === current || (href !== "/" && current.startsWith(href)))) a.classList.add("active");
             });
-        })();
-
-        // ===== Anuncio inicial (opcional) =====
-        (function () {
-            const el = document.getElementById("app-announcement");
-            if (!el) return;
-            el.classList.remove("d-none");
-            setTimeout(() => el.classList.add("d-none"), 4200);
         })();
     </script>
 

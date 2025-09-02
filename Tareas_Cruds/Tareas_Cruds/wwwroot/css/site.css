@@ -1,4 +1,6 @@
-/* Tipografía base */
+/* ================================
+   Tipografía y colores base
+================================ */
 :root {
     --brand-gradient: radial-gradient(1200px 600px at 10% -20%, rgba(13,110,253,.25), transparent), radial-gradient(800px 400px at 90% 0%, rgba(32,201,151,.20), transparent);
 }
@@ -7,19 +9,24 @@ body {
     font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     background: var(--bs-body-bg);
     color: var(--bs-body-color);
+    margin: 0;
+    padding: 0;
 }
 
-/* Hero */
+/* ================================
+   Hero
+================================ */
 .bg-gradient {
     background-image: var(--brand-gradient);
 }
 
-/* Hero card */
 .hero-card .card-body {
     padding: 1.25rem 1.25rem 1rem;
 }
 
-/* Links sutiles */
+/* ================================
+   Links
+================================ */
 a.link-body-emphasis {
     text-decoration: none;
 }
@@ -28,34 +35,60 @@ a.link-body-emphasis {
         text-decoration: underline;
     }
 
-/* Footer */
+/* ================================
+   Footer
+================================ */
 .footer {
     background: var(--bs-body-bg);
+    position: static !important; /* Evita que tape el contenido */
+    z-index: auto;
 }
 
-/* Anuncio superior */
+/* ================================
+   Anuncio superior
+================================ */
 .app-announcement {
     background: linear-gradient(90deg, rgba(13,110,253,.08), rgba(32,201,151,.08));
     padding: .35rem .75rem;
 }
 
-/* Navbar activo */
+[data-bs-theme="dark"] .app-announcement {
+    background: linear-gradient(90deg, rgba(13,110,253,.15), rgba(32,201,151,.15));
+}
+
+/* ================================
+   Navbar
+================================ */
 .navbar .nav-link.active {
     font-weight: 600;
     color: var(--bs-primary) !important;
 }
 
-/* Mejoras a formularios */
-.form-control:focus, .form-select:focus {
+/* ================================
+   Formularios
+================================ */
+.form-control:focus,
+.form-select:focus {
     box-shadow: 0 0 0 .2rem rgba(13,110,253,.25);
 }
 
-/* Tarjetas suaves */
+/* ================================
+   Tarjetas
+================================ */
 .card.shadow-sm {
     border-radius: 1rem;
 }
 
-/* Dark mode pequeños ajustes */
-[data-bs-theme="dark"] .app-announcement {
-    background: linear-gradient(90deg, rgba(13,110,253,.15), rgba(32,201,151,.15));
+/* ================================
+   Layout Fixes
+================================ */
+/* Asegura que el main siempre tenga espacio
+   para empujar el footer abajo */
+main {
+    min-height: 40vh;
+}
+
+/* Evita que el contenido se pegue demasiado al footer */
+.container {
+    padding-bottom: 1rem;
 }
