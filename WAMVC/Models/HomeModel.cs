@@ -4,6 +4,9 @@ namespace WAMVC.Models
 {
     public class HomeModel
     {
+        [Key]
+        public int Id { get; set; }
+
         [Required(ErrorMessage = "El mensaje es obligatorio")]
         [StringLength(500, ErrorMessage = "El mensaje no puede tener más de 500 caracteres")]
         public string? Mensaje { get; set; }

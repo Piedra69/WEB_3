@@ -36,6 +36,7 @@ namespace WAMVC.Data
                     .WithMany(p => p.DetallePedidos) // Un Producto tiene muchos DetallePedidos
                     .HasForeignKey(d => d.IdProducto); // La clave foránea es IdProducto
             }
+        public DbSet<WAMVC.Models.HomeModel> HomeModel { get; set; } = default!;
         }
 
     }
