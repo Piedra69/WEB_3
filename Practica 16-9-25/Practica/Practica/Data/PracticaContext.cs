@@ -18,5 +18,6 @@ namespace Practica.Data
         public DbSet<Practica.Models.DetallePedido> DetallePedido { get; set; } = default!;
         public DbSet<Practica.Models.Pedido> Pedido { get; set; } = default!;
         public DbSet<Practica.Models.Producto> Producto { get; set; } = default!;
+        public DbSet<Practica.Models.Usuario> Usuario { get; set; } = default!;
     }
 }
