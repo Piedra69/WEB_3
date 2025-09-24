@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -22,127 +20,128 @@ namespace Practica.Controllers
         // GET: DetallePedidoes
         public async Task<IActionResult> Index()
         {
-            var practicaContext = _context.DetallePedido.Include(d => d.Pedido).Include(d => d.Producto);
-            return View(await practicaContext.ToListAsync());
+            var query = _context.DetallePedido
+                .AsNoTracking()
+                .Include(d => d.Pedido)
+                .Include(d => d.Producto);
+
+            return View(await query.ToListAsync());
         }
 
         // GET: DetallePedidoes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id is null) return NotFound();
 
             var detallePedido = await _context.DetallePedido
+                .AsNoTracking()
                 .Include(d => d.Pedido)
                 .Include(d => d.Producto)
                 .FirstOrDefaultAsync(m => m.DetallePedidoId == id);
-            if (detallePedido == null)
-            {
-                return NotFound();
-            }
+
+            if (detallePedido is null) return NotFound();
 
             return View(detallePedido);
         }
 
         // GET: DetallePedidoes/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["PedidoId"] = new SelectList(_context.Set<Pedido>(), "PedidoId", "PedidoId");
-            ViewData["ProductoId"] = new SelectList(_context.Set<Producto>(), "ProductoId", "ProductoId");
+            await CargarCombosAsync();
             return View();
         }
 
         // POST: DetallePedidoes/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("DetallePedidoId,PedidoId,ProductoId,Cantidad,PrecioUnitario")] DetallePedido detallePedido)
         {
-            if (ModelState.IsValid)
+            await ValidarNegocioAsync(detallePedido);
+
+            if (!ModelState.IsValid)
+            {
+                await CargarCombosAsync(detallePedido.PedidoId, detallePedido.ProductoId);
+                return View(detallePedido);
+            }
+
+            try
             {
                 _context.Add(detallePedido);
                 await _context.SaveChangesAsync();
+                TempData["Success"] = "Detalle agregado correctamente.";
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PedidoId"] = new SelectList(_context.Set<Pedido>(), "PedidoId", "PedidoId", detallePedido.PedidoId);
-            ViewData["ProductoId"] = new SelectList(_context.Set<Producto>(), "ProductoId", "ProductoId", detallePedido.ProductoId);
-            return View(detallePedido);
+            catch (DbUpdateException)
+            {
+                ModelState.AddModelError(string.Empty, "No se pudo guardar el detalle. Verifica los datos.");
+                await CargarCombosAsync(detallePedido.PedidoId, detallePedido.ProductoId);
+                return View(detallePedido);
+            }
         }
 
         // GET: DetallePedidoes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id is null) return NotFound();
 
             var detallePedido = await _context.DetallePedido.FindAsync(id);
-            if (detallePedido == null)
-            {
-                return NotFound();
-            }
-            ViewData["PedidoId"] = new SelectList(_context.Set<Pedido>(), "PedidoId", "PedidoId", detallePedido.PedidoId);
-            ViewData["ProductoId"] = new SelectList(_context.Set<Producto>(), "ProductoId", "ProductoId", detallePedido.ProductoId);
+            if (detallePedido is null) return NotFound();
+
+            await CargarCombosAsync(detallePedido.PedidoId, detallePedido.ProductoId);
             return View(detallePedido);
         }
 
         // POST: DetallePedidoes/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("DetallePedidoId,PedidoId,ProductoId,Cantidad,PrecioUnitario")] DetallePedido detallePedido)
         {
-            if (id != detallePedido.DetallePedidoId)
+            if (id != detallePedido.DetallePedidoId) return NotFound();
+
+            await ValidarNegocioAsync(detallePedido);
+
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                await CargarCombosAsync(detallePedido.PedidoId, detallePedido.ProductoId);
+                return View(detallePedido);
             }
 
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    _context.Update(detallePedido);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!DetallePedidoExists(detallePedido.DetallePedidoId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _context.Update(detallePedido);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Detalle actualizado correctamente.";
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PedidoId"] = new SelectList(_context.Set<Pedido>(), "PedidoId", "PedidoId", detallePedido.PedidoId);
-            ViewData["ProductoId"] = new SelectList(_context.Set<Producto>(), "ProductoId", "ProductoId", detallePedido.ProductoId);
-            return View(detallePedido);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await DetallePedidoExists(detallePedido.DetallePedidoId))
+                    return NotFound();
+
+                ModelState.AddModelError(string.Empty, "Conflicto de concurrencia. Intenta nuevamente.");
+                await CargarCombosAsync(detallePedido.PedidoId, detallePedido.ProductoId);
+                return View(detallePedido);
+            }
+            catch (DbUpdateException)
+            {
+                ModelState.AddModelError(string.Empty, "No se pudo actualizar el detalle. Verifica los datos.");
+                await CargarCombosAsync(detallePedido.PedidoId, detallePedido.ProductoId);
+                return View(detallePedido);
+            }
         }
 
         // GET: DetallePedidoes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id is null) return NotFound();
 
             var detallePedido = await _context.DetallePedido
+                .AsNoTracking()
                 .Include(d => d.Pedido)
                 .Include(d => d.Producto)
                 .FirstOrDefaultAsync(m => m.DetallePedidoId == id);
-            if (detallePedido == null)
-            {
-                return NotFound();
-            }
+
+            if (detallePedido is null) return NotFound();
 
             return View(detallePedido);
         }
@@ -156,15 +155,79 @@ namespace Practica.Controllers
             if (detallePedido != null)
             {
                 _context.DetallePedido.Remove(detallePedido);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Detalle eliminado.";
             }
-
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool DetallePedidoExists(int id)
+        // ========= Helpers =========
+
+        private async Task CargarCombosAsync(int? pedidoId = null, int? productoId = null)
         {
-            return _context.DetallePedido.Any(e => e.DetallePedidoId == id);
+            var pedidos = await _context.Set<Pedido>()
+                .AsNoTracking()
+                .Select(p => new
+                {
+                    p.PedidoId,
+                    Texto = "Pedido #" + p.PedidoId + " - " + p.FechaPedido.ToString("yyyy-MM-dd")
+                })
+                .ToListAsync();
+
+            var productos = await _context.Set<Producto>()
+                .AsNoTracking()
+                .Select(p => new
+                {
+                    p.ProductoId,
+                    p.Nombre
+                })
+                .ToListAsync();
+
+            ViewData["PedidoId"] = new SelectList(pedidos, "PedidoId", "Texto", pedidoId);
+            ViewData["ProductoId"] = new SelectList(productos, "ProductoId", "Nombre", productoId);
         }
+
+        /// <summary>
+        /// Reglas de negocio adicionales y refuerzo de DataAnnotations.
+        /// </summary>
+        private async Task ValidarNegocioAsync(DetallePedido d)
+        {
+            // Verificar FK Pedido
+            var pedidoExiste = await _context.Set<Pedido>()
+                .AsNoTracking()
+                .AnyAsync(p => p.PedidoId == d.PedidoId);
+
+            if (!pedidoExiste)
+                ModelState.AddModelError(nameof(DetallePedido.PedidoId), "Debe seleccionar un pedido válido.");
+
+            // Verificar FK Producto
+            var producto = await _context.Set<Producto>()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p => p.ProductoId == d.ProductoId);
+
+            if (producto is null)
+                ModelState.AddModelError(nameof(DetallePedido.ProductoId), "Debe seleccionar un producto válido.");
+
+            // Cantidad mínima
+            if (d.Cantidad < 1)
+                ModelState.AddModelError(nameof(DetallePedido.Cantidad), "La cantidad debe ser al menos 1.");
+
+            // Precio > 0 (si no viene, usar el del producto)
+            if (d.PrecioUnitario <= 0)
+            {
+                if (producto != null && producto.Precio > 0)
+                {
+                    // Ajuste automático: tomar el precio del producto
+                    d.PrecioUnitario = producto.Precio;
+                }
+                else
+                {
+                    ModelState.AddModelError(nameof(DetallePedido.PrecioUnitario), "El precio unitario debe ser mayor a 0.");
+                }
+            }
+        }
+
+        private async Task<bool> DetallePedidoExists(int id)
+            => await _context.DetallePedido.AnyAsync(e => e.DetallePedidoId == id);
     }
 }
