@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Practica.Data;
 using Practica.Models;
@@ -22,114 +20,130 @@ namespace Practica.Controllers
         // GET: Clientes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Cliente.ToListAsync());
+            var data = await _context.Cliente.AsNoTracking().ToListAsync();
+            return View(data);
         }
 
         // GET: Clientes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id is null) return NotFound();
 
             var cliente = await _context.Cliente
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ClienteId == id);
-            if (cliente == null)
-            {
-                return NotFound();
-            }
+
+            if (cliente is null) return NotFound();
 
             return View(cliente);
         }
 
         // GET: Clientes/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
+        public IActionResult Create() => View();
 
         // POST: Clientes/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ClienteId,Nombre,Email")] Cliente cliente)
         {
-           // if (ModelState.IsValid)
+            Normalizar(cliente);
+
+            // Validación de negocio: Email único
+            if (!string.IsNullOrWhiteSpace(cliente.Email))
+            {
+                var emailExists = await _context.Cliente
+                    .AsNoTracking()
+                    .AnyAsync(c => c.Email.ToLower() == cliente.Email.ToLower());
+
+                if (emailExists)
+                    ModelState.AddModelError(nameof(Cliente.Email), "Ese correo ya está registrado.");
+            }
+
+            if (!ModelState.IsValid)
+                return View(cliente);
+
+            try
             {
                 _context.Add(cliente);
                 await _context.SaveChangesAsync();
+                TempData["Success"] = "Cliente creado correctamente.";
                 return RedirectToAction(nameof(Index));
             }
-            return View(cliente);
+            catch (DbUpdateException)
+            {
+                // Por si hay constraint único en DB
+                ModelState.AddModelError(string.Empty, "No se pudo guardar el cliente. Verifica los datos.");
+                return View(cliente);
+            }
         }
 
         // GET: Clientes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id is null) return NotFound();
 
             var cliente = await _context.Cliente.FindAsync(id);
-            if (cliente == null)
-            {
-                return NotFound();
-            }
+            if (cliente is null) return NotFound();
+
             return View(cliente);
         }
 
         // POST: Clientes/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ClienteId,Nombre,Email")] Cliente cliente)
         {
-            if (id != cliente.ClienteId)
+            if (id != cliente.ClienteId) return NotFound();
+
+            Normalizar(cliente);
+
+            // Validación de negocio: Email único (excluyendo el mismo Id)
+            if (!string.IsNullOrWhiteSpace(cliente.Email))
             {
-                return NotFound();
+                var emailExists = await _context.Cliente
+                    .AsNoTracking()
+                    .AnyAsync(c => c.ClienteId != cliente.ClienteId &&
+                                   c.Email.ToLower() == cliente.Email.ToLower());
+
+                if (emailExists)
+                    ModelState.AddModelError(nameof(Cliente.Email), "Ese correo ya está registrado.");
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return View(cliente);
+
+            try
             {
-                try
-                {
-                    _context.Update(cliente);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ClienteExists(cliente.ClienteId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _context.Update(cliente);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Cliente actualizado correctamente.";
                 return RedirectToAction(nameof(Index));
             }
-            return View(cliente);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await ClienteExists(cliente.ClienteId))
+                    return NotFound();
+
+                ModelState.AddModelError(string.Empty, "Conflicto de concurrencia. Intenta nuevamente.");
+                return View(cliente);
+            }
+            catch (DbUpdateException)
+            {
+                ModelState.AddModelError(string.Empty, "No se pudo actualizar el cliente. Verifica los datos.");
+                return View(cliente);
+            }
         }
 
         // GET: Clientes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id is null) return NotFound();
 
             var cliente = await _context.Cliente
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ClienteId == id);
-            if (cliente == null)
-            {
-                return NotFound();
-            }
+
+            if (cliente is null) return NotFound();
 
             return View(cliente);
         }
@@ -143,15 +157,23 @@ namespace Practica.Controllers
             if (cliente != null)
             {
                 _context.Cliente.Remove(cliente);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Cliente eliminado.";
             }
-
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ClienteExists(int id)
+        private async Task<bool> ClienteExists(int id)
+            => await _context.Cliente.AnyAsync(e => e.ClienteId == id);
+
+        /// <summary>
+        /// Aplica trims y normalizaciones simples previas a validar/guardar
+        /// </summary>
+        private static void Normalizar(Cliente c)
         {
-            return _context.Cliente.Any(e => e.ClienteId == id);
+            if (c is null) return;
+            c.Nombre = c.Nombre?.Trim();
+            c.Email = c.Email?.Trim();
         }
     }
 }
