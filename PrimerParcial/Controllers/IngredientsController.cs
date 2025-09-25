@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using PrimerParcial.Data;
 using PrimerParcial.Models;
 
-namespace PrimerParcial
+namespace PrimerParcial.Controllers
 {
     public class IngredientsController : Controller
     {
