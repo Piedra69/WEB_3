@@ -1,49 +1,150 @@
 ﻿@model Practica.Models.Usuario
-
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar Usuario";
 }
+<style>
+    /* igual que Create */
+    :root {
+        --bg: #f4f6f9;
+        --fg: #333;
+        --primary: #1a73e8;
+        --border: #e5e7eb
+    }
 
-<h1>Edit</h1>
+    body {
+        background: var(--bg);
+        color: var(--fg)
+    }
 
-<h4>Usuario</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    .container {
+        max-width: 720px;
+        margin: 24px auto;
+        padding: 0 16px
+    }
+
+    .card {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0,0,0,.06);
+        padding: 24px
+    }
+
+    .h1 {
+        font-size: 1.5rem;
+        margin: 0 0 16px
+    }
+
+    .form-group {
+        margin-bottom: 1rem
+    }
+
+    .label {
+        display: block;
+        margin-bottom: .35rem;
+        font-weight: 600
+    }
+
+    .form-control {
+        width: 100%;
+        padding: .6rem .75rem;
+        border: 1px solid #d1d5db;
+        border-radius: 8px
+    }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 .2rem rgba(26,115,232,.15)
+        }
+
+    .validation {
+        color: #b91c1c;
+        margin: .5rem 0
+    }
+
+    .field-validation-error {
+        color: #b91c1c;
+        font-size: .9rem
+    }
+
+    .btn {
+        padding: .55rem 1rem;
+        border-radius: 8px;
+        border: none;
+        text-decoration: none;
+        cursor: pointer
+    }
+
+    .btn-primary {
+        background: var(--primary);
+        color: #fff
+    }
+
+    .btn-light {
+        background: #f3f4f6
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px
+    }
+
+
+    {
+        grid-template-columns: 1fr
+    }
+
+    }
+
+    .note {
+        color: #6b7280;
+        font-size: .9rem;
+        margin-top: .35rem
+    }
+</style>
+
+<div class="container">
+    <div class="card">
+        <div class="h1">Editar Usuario</div>
+        <div asp-validation-summary="ModelOnly" class="validation"></div>
+        <form asp-action="Edit" method="post">
             <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Nombre" class="control-label"></label>
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
+            <div class="grid">
+                <div class="form-group">
+                    <label class="label" asp-for="Nombre"></label>
+                    <input class="form-control" asp-for="Nombre" />
+                    <span asp-validation-for="Nombre" class="field-validation-error"></span>
+                </div>
+                <div class="form-group">
+                    <label class="label" asp-for="Email"></label>
+                    <input class="form-control" asp-for="Email" />
+                    <span asp-validation-for="Email" class="field-validation-error"></span>
+                </div>
+                <div class="form-group">
+                    <label class="label" asp-for="Password"></label>
+                    <input class="form-control" asp-for="Password" type="password" placeholder="Deja vacío para conservar" />
+                    <div class="note">Deja vacío para mantener la contraseña actual.</div>
+                    <span asp-validation-for="Password" class="field-validation-error"></span>
+                </div>
+                <div class="form-group">
+                    <label class="label" asp-for="Rol"></label>
+                    <select class="form-control" asp-for="Rol">
+                        <option value="">Seleccione un rol…</option>
+                        <option>admin</option>
+                        <option>cliente</option>
+                        <option>empleado</option>
+                    </select>
+                    <span asp-validation-for="Rol" class="field-validation-error"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Rol" class="control-label"></label>
-                <input asp-for="Rol" class="form-control" />
-                <span asp-validation-for="Rol" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <a asp-action="Index" class="btn btn-light">Volver</a>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <partial name="_ValidationScriptsPartial" />
 }
