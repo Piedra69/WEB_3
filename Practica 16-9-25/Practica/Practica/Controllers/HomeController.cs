@@ -1,32 +1,54 @@
-using System.Diagnostics;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using Practica.Models;
 
 namespace Practica.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        // Credenciales DEMO: usuario -> (password, rol)
+        private static readonly Dictionary<string, (string Pass, string Rol)> Creds = new()
         {
-            _logger = logger;
-        }
+            ["admin"] = ("1234", "admin"),
+            ["cliente"] = ("4321", "cliente"),
+            ["empleado"] = ("1111", "empleado")
+        };
 
+        [HttpGet]
         public IActionResult Index()
         {
+            // Renderiza el formulario
             return View();
         }
 
-        public IActionResult Privacy()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Index(string usuario, string password)
         {
-            return View();
-        }
+            // Validación básica (sin models)
+            if (string.IsNullOrWhiteSpace(usuario) || string.IsNullOrWhiteSpace(password))
+            {
+                ViewBag.Error = "Completa usuario y contraseña.";
+                return View();
+            }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var key = usuario.Trim().ToLowerInvariant();
+            var pass = password.Trim();
+
+            if (Creds.TryGetValue(key, out var info) && info.Pass == pass)
+            {
+                ViewBag.Mensaje = info.Rol switch
+                {
+                    "admin" => "Hola Admin",
+                    "cliente" => "Hola Cliente",
+                    "empleado" => "Hola Empleado",
+                    _ => "Hola"
+                };
+                // Mostramos el saludo en la misma vista
+                return View();
+            }
+
+            ViewBag.Error = "Usuario o contraseña inválidos.";
+            return View();
         }
     }
 }

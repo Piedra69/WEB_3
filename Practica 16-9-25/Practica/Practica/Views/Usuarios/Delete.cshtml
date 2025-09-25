@@ -1,45 +1,86 @@
 ﻿@model Practica.Models.Usuario
-
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Eliminar Usuario";
 }
+<style>
+    :root {
+        --bg: #f4f6f9;
+        --fg: #333;
+        --border: #e5e7eb
+    }
 
-<h1>Delete</h1>
+    body {
+        background: var(--bg);
+        color: var(--fg)
+    }
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Usuario</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Nombre)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Nombre)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Password)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Password)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Rol)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Rol)
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+    .container {
+        max-width: 720px;
+        margin: 24px auto;
+        padding: 0 16px
+    }
+
+    .card {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0,0,0,.06);
+        padding: 24px
+    }
+
+    .warn {
+        background: #fef3c7;
+        border: 1px solid #f59e0b;
+        padding: .75rem;
+        border-radius: 8px;
+        margin-bottom: 16px
+    }
+
+    .dl {
+        display: grid;
+        grid-template-columns: 180px 1fr;
+        gap: 8px 16px;
+        margin: 10px 0 16px
+    }
+
+    .dt {
+        font-weight: 600;
+        color: #555
+    }
+
+    .btn {
+        padding: .55rem 1rem;
+        border-radius: 8px;
+        border: none;
+        text-decoration: none;
+        cursor: pointer
+    }
+
+    .btn-danger {
+        background: #dc3545;
+        color: #fff
+    }
+
+    .btn-light {
+        background: #f3f4f6
+    }
+</style>
+
+<div class="container">
+    <div class="card">
+        <div class="warn">¿Seguro que deseas eliminar este usuario?</div>
+
+        <div class="dl">
+            <div class="dt">Id</div><div>@Model.Id</div>
+            <div class="dt">Nombre</div><div>@Model.Nombre</div>
+            <div class="dt">Email</div><div>@Model.Email</div>
+            <div class="dt">Rol</div><div>@Model.Rol</div>
+        </div>
+
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="Id" />
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+            <a asp-action="Index" class="btn btn-light">Cancelar</a>
+        </form>
+    </div>
 </div>

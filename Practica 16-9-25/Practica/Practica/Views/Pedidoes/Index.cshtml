@@ -1,6 +1,6 @@
-﻿@model IEnumerable<Practica.Models.Producto>
+﻿@model IEnumerable<Practica.Models.Pedido>
 @{
-    ViewData["Title"] = "Productos";
+    ViewData["Title"] = "Pedidos";
 }
 <style>
     :root {
@@ -82,14 +82,14 @@
 
 <div class="container">
     <div class="card">
-        <div class="h1">Productos</div>
-        <p><a asp-action="Create" class="btn btn-primary">+ Nuevo producto</a></p>
+        <div class="h1">Pedidos</div>
+        <p><a asp-action="Create" class="btn btn-primary">+ Nuevo pedido</a></p>
         <table class="table">
             <thead>
                 <tr>
                     <th>Id</th>
-                    <th>Nombre</th>
-                    <th>Precio</th>
+                    <th>Fecha</th>
+                    <th>Cliente</th>
                     <th style="width:230px;">Acciones</th>
                 </tr>
             </thead>
@@ -97,13 +97,13 @@
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td>@item.ProductoId</td>
-                        <td>@item.Nombre</td>
-                        <td>@item.Precio.ToString("C")</td>
+                        <td>@item.PedidoId</td>
+                        <td>@item.FechaPedido.ToString("yyyy-MM-dd")</td>
+                        <td>@item.Cliente?.Nombre</td>
                         <td class="actions">
-                            <a class="btn btn-light" asp-action="Edit" asp-route-id="@item.ProductoId">Editar</a>
-                            <a class="btn btn-light" asp-action="Details" asp-route-id="@item.ProductoId">Detalles</a>
-                            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.ProductoId">Eliminar</a>
+                            <a class="btn btn-light" asp-action="Edit" asp-route-id="@item.PedidoId">Editar</a>
+                            <a class="btn btn-light" asp-action="Details" asp-route-id="@item.PedidoId">Detalles</a>
+                            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.PedidoId">Eliminar</a>
                         </td>
                     </tr>
                 }

@@ -1,9 +1,9 @@
-﻿@model Practica.Models.Producto
+﻿@model Practica.Models.Pedido
 @{
-    ViewData["Title"] = "Editar Producto";
+    ViewData["Title"] = "Editar Pedido";
 }
 <style>
-    /* reutiliza estilos de formulario */
+    /* igual que Create */
     :root {
         --bg: #f4f6f9;
         --fg: #333;
@@ -88,19 +88,19 @@
 
 <div class="container">
     <div class="card">
-        <div class="h1">Editar Producto</div>
+        <div class="h1">Editar Pedido</div>
         <div asp-validation-summary="ModelOnly" class="validation"></div>
         <form asp-action="Edit" method="post">
-            <input type="hidden" asp-for="ProductoId" />
+            <input type="hidden" asp-for="PedidoId" />
             <div class="form-group">
-                <label class="label" asp-for="Nombre"></label>
-                <input class="form-control" asp-for="Nombre" />
-                <span asp-validation-for="Nombre" class="field-validation-error"></span>
+                <label class="label" asp-for="FechaPedido"></label>
+                <input class="form-control" asp-for="FechaPedido" type="date" />
+                <span asp-validation-for="FechaPedido" class="field-validation-error"></span>
             </div>
             <div class="form-group">
-                <label class="label" asp-for="Precio"></label>
-                <input class="form-control" asp-for="Precio" />
-                <span asp-validation-for="Precio" class="field-validation-error"></span>
+                <label class="label" asp-for="ClienteId">Cliente</label>
+                <select class="form-control" asp-for="ClienteId" asp-items="ViewBag.ClienteId"></select>
+                <span asp-validation-for="ClienteId" class="field-validation-error"></span>
             </div>
             <button type="submit" class="btn btn-primary">Guardar</button>
             <a asp-action="Index" class="btn btn-light">Volver</a>

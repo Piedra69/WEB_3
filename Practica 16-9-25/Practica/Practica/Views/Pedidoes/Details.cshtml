@@ -1,6 +1,6 @@
-﻿@model Practica.Models.Producto
+﻿@model Practica.Models.Pedido
 @{
-    ViewData["Title"] = "Detalles Producto";
+    ViewData["Title"] = "Detalles Pedido";
 }
 <style>
     :root {
@@ -16,7 +16,7 @@
     }
 
     .container {
-        max-width: 720px;
+        max-width: 900px;
         margin: 24px auto;
         padding: 0 16px
     }
@@ -37,12 +37,33 @@
     .dl {
         display: grid;
         grid-template-columns: 180px 1fr;
-        gap: 10px 16px
+        gap: 10px 16px;
+        margin-bottom: 16px
     }
 
     .dt {
         font-weight: 600;
         color: #555
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        margin-top: 10px
+    }
+
+        .table th, .table td {
+            padding: .55rem;
+            border-bottom: 1px solid var(--border)
+        }
+
+    .sum {
+        margin-top: 10px;
+        font-weight: 700
     }
 
     .btn {
@@ -65,14 +86,39 @@
 
 <div class="container">
     <div class="card">
-        <div class="h1">Detalles de Producto</div>
+        <div class="h1">Detalles del Pedido</div>
+
         <div class="dl">
-            <div class="dt">Id</div><div>@Model.ProductoId</div>
-            <div class="dt">Nombre</div><div>@Model.Nombre</div>
-            <div class="dt">Precio</div><div>@Model.Precio.ToString("C")</div>
+            <div class="dt">Id</div><div>@Model.PedidoId</div>
+            <div class="dt">Fecha</div><div>@Model.FechaPedido.ToString("yyyy-MM-dd")</div>
+            <div class="dt">Cliente</div><div>@Model.Cliente?.Nombre (@Model.Cliente?.Email)</div>
         </div>
+
+        @if (Model.Detalles != null && Model.Detalles.Any())
+        {
+            <table class="table">
+                <thead>
+                    <tr><th>Producto</th><th>Cantidad</th><th>Precio</th><th>Subtotal</th></tr>
+                </thead>
+                <tbody>
+                    @foreach (var d in Model.Detalles)
+                    {
+                        <tr>
+                            <td>@d.Producto?.Nombre</td>
+                            <td>@d.Cantidad</td>
+                            <td>@d.PrecioUnitario.ToString("C")</td>
+                            <td>@((d.Cantidad * d.PrecioUnitario).ToString("C"))</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="sum">
+                Total: @Model.Detalles.Sum(x => x.Cantidad * x.PrecioUnitario).ToString("C")
+            </div>
+        }
+
         <div style="margin-top:16px">
-            <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.ProductoId">Editar</a>
+            <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.PedidoId">Editar</a>
             <a class="btn btn-light" asp-action="Index">Volver</a>
         </div>
     </div>

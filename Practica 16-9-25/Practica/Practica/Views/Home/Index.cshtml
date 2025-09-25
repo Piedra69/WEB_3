@@ -1,8 +1,154 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Inicio";
+    var mensaje = ViewBag.Mensaje as string;
+    var error = ViewBag.Error as string;
 }
+<style>
+    :root {
+        --bg: #f4f6f9;
+        --fg: #333;
+        --primary: #1a73e8;
+        --border: #e5e7eb;
+    }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    body {
+        background: var(--bg);
+        color: var(--fg);
+        font-family: Segoe UI,Roboto,Arial,sans-serif;
+    }
+
+    .container {
+        max-width: 480px;
+        margin: 64px auto;
+        padding: 0 16px;
+    }
+
+    .card {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0,0,0,.08);
+        padding: 28px;
+    }
+
+    .h1 {
+        font-size: 1.5rem;
+        margin: 0 0 10px;
+        font-weight: 800;
+    }
+
+    .small {
+        color: #6b7280;
+        margin: 0 0 16px;
+    }
+
+    .form-group {
+        margin-bottom: 14px;
+    }
+
+    .label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 600;
+    }
+
+    .input {
+        width: 100%;
+        padding: .65rem .8rem;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+    }
+
+        .input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 .18rem rgba(26,115,232,.15);
+        }
+
+    .btn {
+        width: 100%;
+        padding: .7rem 1rem;
+        border-radius: 10px;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        background: var(--primary);
+        color: #fff;
+    }
+
+    .err {
+        background: #fde8e8;
+        border: 1px solid #f5b2b2;
+        color: #8a1c1c;
+        padding: .6rem;
+        border-radius: 10px;
+        margin-bottom: 12px;
+    }
+
+    .ok {
+        font-size: 2rem;
+        font-weight: 900;
+        text-align: center;
+        margin: 8px 0 14px;
+    }
+
+    .link {
+        display: block;
+        text-align: center;
+        margin-top: 12px;
+        text-decoration: none;
+        padding: .55rem;
+        border-radius: 10px;
+        border: 1px solid #e5e7eb;
+    }
+
+        .link:hover {
+            border-color: #cbd5e1;
+        }
+
+    kbd {
+        background: #eef2ff;
+        border: 1px solid #c7d2fe;
+        border-radius: 6px;
+        padding: 0 .35rem;
+    }
+
+    .center {
+        display: flex;
+        justify-content: center;
+        margin-top: 14px;
+    }
+</style>
+
+<div class="container">
+    <div class="card">
+        @if (!string.IsNullOrWhiteSpace(mensaje))
+        {
+            <div class="ok">@mensaje</div>
+            <a class="link" asp-action="Index" asp-controller="Home">Volver</a>
+        }
+        else
+        {
+            <div class="h1">Iniciar sesión (Demo)</div>
+            <p class="small">Login falso sin base de datos. Usa: <kbd>admin/1234</kbd>, <kbd>cliente/4321</kbd> o <kbd>empleado/1111</kbd>.</p>
+
+            @if (!string.IsNullOrWhiteSpace(error))
+            {
+                <div class="err">@error</div>
+            }
+
+            <form asp-action="Index" asp-controller="Home" method="post">
+                @Html.AntiForgeryToken()
+                <div class="form-group">
+                    <label class="label" for="usuario">Usuario</label>
+                    <input class="input" type="text" id="usuario" name="usuario" autocomplete="username" />
+                </div>
+                <div class="form-group">
+                    <label class="label" for="password">Contraseña</label>
+                    <input class="input" type="password" id="password" name="password" autocomplete="current-password" />
+                </div>
+                <button type="submit" class="btn">Entrar</button>
+            </form>
+        }
+    </div>
 </div>
