@@ -17,14 +17,9 @@ namespace PrimerParcial.Models
         = DateTime.UtcNow;
         public int CategoryId { get; set; }
         public Category Category { get; set; }
+        public ICollection<Ingredient> Ingredients { get; set; }
 
 
 
     }
 }
-//Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-  //                  PreparationTimeMinutes = table.Column<int>(type: "int", nullable: false),
-  //                  Servings = table.Column<int>(type: "int", nullable: false),
-    //                Instructions = table.Column<string>(type: "nvarchar(max)", nullable: false),
-      //              DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
-        //            CategoryId

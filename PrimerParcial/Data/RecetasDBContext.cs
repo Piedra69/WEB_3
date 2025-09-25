@@ -13,7 +13,7 @@ namespace PrimerParcial.Data
 
         // DbSets (Colecciones) que mapean a las tablas de la base de datos
 
-        public DbSet<Recipe> Recipes { get; set; }
+        public DbSet<Recipes> Recipes { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
         public DbSet<Category> Categories { get; set; }
 
@@ -29,7 +29,7 @@ namespace PrimerParcial.Data
                 .HasForeignKey(i => i.RecipeId); // Usa RecipeId como clave foránea
 
             // Configura la relación uno a muchos entre Category y Recipe
-            modelBuilder.Entity<Recipe>()
+            modelBuilder.Entity<Recipes>()
                 .HasOne(r => r.Category) // Una receta tiene una categoría
                 .WithMany(c => c.Recipes) // Una categoría tiene muchas recetas
                 .HasForeignKey(r => r.CategoryId); // Usa CategoryId como clave foránea
