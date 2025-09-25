@@ -1,30 +1,79 @@
 ﻿@model Practica.Models.Producto
-
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalles Producto";
 }
+<style>
+    :root {
+        --bg: #f4f6f9;
+        --fg: #333;
+        --primary: #1a73e8;
+        --border: #e5e7eb
+    }
 
-<h1>Details</h1>
+    body {
+        background: var(--bg);
+        color: var(--fg)
+    }
 
-<div>
-    <h4>Producto</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Nombre)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Nombre)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Precio)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Precio)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.ProductoId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    .container {
+        max-width: 720px;
+        margin: 24px auto;
+        padding: 0 16px
+    }
+
+    .card {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0,0,0,.06);
+        padding: 24px
+    }
+
+    .h1 {
+        font-size: 1.5rem;
+        margin: 0 0 16px
+    }
+
+    .dl {
+        display: grid;
+        grid-template-columns: 180px 1fr;
+        gap: 10px 16px
+    }
+
+    .dt {
+        font-weight: 600;
+        color: #555
+    }
+
+    .btn {
+        padding: .55rem 1rem;
+        border-radius: 8px;
+        border: none;
+        text-decoration: none;
+        cursor: pointer
+    }
+
+    .btn-light {
+        background: #f3f4f6
+    }
+
+    .btn-primary {
+        background: var(--primary);
+        color: #fff
+    }
+</style>
+
+<div class="container">
+    <div class="card">
+        <div class="h1">Detalles de Producto</div>
+        <div class="dl">
+            <div class="dt">Id</div><div>@Model.ProductoId</div>
+            <div class="dt">Nombre</div><div>@Model.Nombre</div>
+            <div class="dt">Precio</div><div>@Model.Precio.ToString("C")</div>
+        </div>
+        <div style="margin-top:16px">
+            <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.ProductoId">Editar</a>
+            <a class="btn btn-light" asp-action="Index">Volver</a>
+        </div>
+    </div>
 </div>
