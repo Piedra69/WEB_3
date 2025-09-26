@@ -59,12 +59,12 @@ namespace PrimerParcial.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,Description,PreparationTimeMinutes,Servings,Instructions,DateCreated,DateUpdated,CategoryId")] Recipes recipes)
         {
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
                 _context.Add(recipes);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            }
+            //}
             ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", recipes.CategoryId);
             return View(recipes);
         }
@@ -98,8 +98,8 @@ namespace PrimerParcial.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
+           //if (ModelState.IsValid)
+           // {
                 try
                 {
                     _context.Update(recipes);
@@ -117,7 +117,7 @@ namespace PrimerParcial.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }
+            //}
             ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", recipes.CategoryId);
             return View(recipes);
         }

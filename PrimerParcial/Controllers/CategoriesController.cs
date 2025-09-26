@@ -56,14 +56,14 @@ namespace PrimerParcial.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Description")] Category category)
         {
-            if (ModelState.IsValid)
-            {
+           // if (ModelState.IsValid)
+            //{
                 _context.Add(category);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(category);
-        }
+            //return View(category);
+       // }
 
         // GET: Categories/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -93,8 +93,8 @@ namespace PrimerParcial.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
+           // if (ModelState.IsValid)
+            //{
                 try
                 {
                     _context.Update(category);
@@ -112,7 +112,7 @@ namespace PrimerParcial.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }
+            //}
             return View(category);
         }
 
