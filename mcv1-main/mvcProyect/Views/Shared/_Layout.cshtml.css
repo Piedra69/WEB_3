@@ -1,0 +1,94 @@
+﻿/* Estilos renovados: diseño suave y moderno inspirado en neumorfismo */
+
+/* Marca de navegación */
+a.navbar-brand {
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    color: #3b3b3b;
+    letter-spacing: 0.05em;
+    text-align: center;
+    white-space: nowrap;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* Enlaces generales */
+a {
+    color: #6a4cff;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+    a:hover {
+        color: #4a2fc1;
+        text-decoration: underline;
+    }
+
+/* Botones principales */
+.btn-primary {
+    background: linear-gradient(135deg, #8f94fb, #4e54c8);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.6rem 1.2rem;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1), -4px -4px 10px rgba(255, 255, 255, 0.6);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15);
+    }
+
+/* Navegación tipo pills */
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
+    background-color: #6a4cff;
+    color: #fff;
+    border-radius: 6px;
+    box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.1), inset -2px -2px 4px rgba(255, 255, 255, 0.4);
+}
+
+/* Bordes */
+.border-top {
+    border-top: 2px dashed #d1d1e0;
+}
+
+.border-bottom {
+    border-bottom: 2px dashed #d1d1e0;
+}
+
+/* Sombra de caja */
+.box-shadow {
+    box-shadow: 0 4px 12px rgba(50, 50, 93, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+    border-radius: 10px;
+}
+
+/* Botón aceptar política */
+button.accept-policy {
+    background-color: #ff6f61;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+    button.accept-policy:hover {
+        background-color: #e65b50;
+    }
+
+/* Pie de página */
+.footer {
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    background-color: #f0f2f5;
+    color: #333;
+    font-size: 0.95rem;
+    line-height: 60px;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+}
