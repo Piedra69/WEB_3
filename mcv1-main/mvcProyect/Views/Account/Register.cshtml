@@ -1,0 +1,50 @@
+﻿@{
+    ViewData["Title"] = "Registro de Usuario";
+}
+
+<div class="container mt-5" style="max-width: 500px;">
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <h3 class="text-center mb-4">Crear Cuenta</h3>
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger">
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <p>@error.ErrorMessage</p>
+                    }
+                </div>
+            }
+
+            <form asp-action="Register" method="post">
+                <div class="mb-3">
+                    <label for="nombreCompleto" class="form-label">Nombre completo</label>
+                    <input type="text" id="nombreCompleto" name="nombreCompleto" class="form-control" required placeholder="Tu nombre completo" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="email" class="form-label">Correo electrónico</label>
+                    <input type="email" id="email" name="email" class="form-control" required placeholder="usuario@correo.com" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="fechaNacimiento" class="form-label">Fecha de nacimiento</label>
+                    <input type="date" id="fechaNacimiento" name="fechaNacimiento" class="form-control" required />
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">Contraseña</label>
+                    <input type="password" id="password" name="password" class="form-control" required placeholder="********" />
+                </div>
+
+                <button type="submit" class="btn btn-success w-100">Registrarse</button>
+
+                <div class="text-center mt-3">
+                    <span>¿Ya tienes cuenta?</span>
+                    <a asp-controller="Account" asp-action="Login">Inicia sesión</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

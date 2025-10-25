@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using mvcProyect.Data;
 
@@ -11,9 +12,11 @@ using mvcProyect.Data;
 namespace mvcProyect.Migrations
 {
     [DbContext(typeof(ArtesaniasDBContext))]
-    partial class ArtesaniasDBContextModelSnapshot : ModelSnapshot
+    [Migration("20251025143811_add--migration 2.0")]
+    partial class addmigration20
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
