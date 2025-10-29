@@ -39,7 +39,8 @@ namespace mvcProyect.Controllers
                     new Claim(ClaimTypes.Name, usuario.Email),
                     new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
                     new Claim(ClaimTypes.Role, usuario.Rol),
-                    new Claim("NombreCompleto", usuario.NombreCompleto)
+                    new Claim("NombreCompleto", usuario.NombreCompleto),
+                    new Claim("FechaNacimiento", usuario.FechaNacimiento.ToString("yyyy-MM-dd"))
                 };
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -69,6 +70,15 @@ namespace mvcProyect.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(string email, string password, string nombreCompleto, DateTime fechaNacimiento)
         {
+            var edad = DateTime.Today.Year - fechaNacimiento.Year;
+            if (fechaNacimiento.Date > DateTime.Today.AddYears(-edad)) edad--;
+
+            if (edad < 18)
+            {
+                ModelState.AddModelError("", "Debes tener al menos 18 años para registrarte.");
+                return View();
+            }
+
             if (_context.Usuarios.Any(u => u.Email == email))
             {
                 ModelState.AddModelError("", "El email ya está registrado");
@@ -88,12 +98,12 @@ namespace mvcProyect.Controllers
             _context.Usuarios.Add(usuario);
             await _context.SaveChangesAsync();
 
-            // Auto-login
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, usuario.Email),
                 new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
-                new Claim(ClaimTypes.Role, usuario.Rol)
+                new Claim(ClaimTypes.Role, usuario.Rol),
+                new Claim("FechaNacimiento", usuario.FechaNacimiento.ToString("yyyy-MM-dd"))
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

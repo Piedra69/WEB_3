@@ -19,14 +19,12 @@ namespace mvcProyect.Controllers
             _context = context;
         }
 
-        // GET: PedidoModels
         public async Task<IActionResult> Index()
         {
             var artesaniasDBContext = _context.Pedidos.Include(p => p.Cliente);
             return View(await artesaniasDBContext.ToListAsync());
         }
 
-        // GET: PedidoModels/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -45,16 +43,12 @@ namespace mvcProyect.Controllers
             return View(pedidoModel);
         }
 
-        // GET: PedidoModels/Create
         public IActionResult Create()
         {
             ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "NombreCompleto");
             return View();
         }
 
-        // POST: PedidoModels/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,FechaPedido,ClienteId,Estado,MontoDecimal")] PedidoModel pedidoModel)
@@ -69,7 +63,6 @@ namespace mvcProyect.Controllers
             return View(pedidoModel);
         }
 
-        // GET: PedidoModels/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -86,9 +79,6 @@ namespace mvcProyect.Controllers
             return View(pedidoModel);
         }
 
-        // POST: PedidoModels/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,FechaPedido,ClienteId,Estado,MontoDecimal")] PedidoModel pedidoModel)
@@ -122,7 +112,6 @@ namespace mvcProyect.Controllers
             return View(pedidoModel);
         }
 
-        // GET: PedidoModels/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -141,7 +130,6 @@ namespace mvcProyect.Controllers
             return View(pedidoModel);
         }
 
-        // POST: PedidoModels/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
