@@ -31,7 +31,8 @@ namespace EJERCICIO04112025.Services
             {
                 Email = dto.Email,
                 UserName = dto.UserName,
-                Password = HashPassword(dto.Password)
+                Password = HashPassword(dto.Password),
+                
             };
 
             _appDbContext.Users.Add(user);

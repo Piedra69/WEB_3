@@ -124,3 +124,4 @@ namespace mvcProyect.Controllers
         public IActionResult AccessDenied() => View();
     }
 }
+    
