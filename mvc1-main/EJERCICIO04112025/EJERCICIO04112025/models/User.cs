@@ -12,6 +12,11 @@ namespace EJERCICIO04112025.models
         [Required]
         public string Password { get; set; } = string.Empty;
 
+        public List<User> Users { get; set; }
+        
+        
+
+       
         public DateTime FechaNacimiento { get; set; }
         public int edad;
     }

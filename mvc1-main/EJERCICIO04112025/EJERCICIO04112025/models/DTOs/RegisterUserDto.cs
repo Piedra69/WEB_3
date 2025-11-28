@@ -12,6 +12,11 @@ namespace EJERCICIO04112025.models.DTOs
 
         [Required]
         public string Password { get; set; } = string.Empty;
+        [Required] public int rol_id { get; set; }
+
+        [Required]
+
+        public int rol_tipo { get; set; }
     }
 
     // Esta clase es para actualizar un usuario existente mediante el ID
